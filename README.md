@@ -278,3 +278,277 @@ class _MyAppState extends State<MyApp> {
 
 Now build the project and redeploy the app into the emulator. You should now see components that allow you to sign-up, sign-in, reset password etc within the app.
 
+## Add an API with a CRUD (Create, Read, Update, Delete) backend
+
+We will now create an API that allows us to add, delete todo items to a database and fetch these items. For this purpose we will provision the Amazon API Gateway, Lambda functions and a DynamoDB database.
+
+From the root folder execute the following command and choose the provided options.
+
+```bash
+amplify add api
+
+? Please select from one of the below mentioned services REST
+? Provide a friendly name for your resource to be used as a label for this category in the project: flutterTodoApi
+? Provide a path (e.g., /book/{isbn}) /todo
+? Choose a Lambda source Create a new Lambda function
+? Provide a friendly name for your resource to be used as a label for this category in the project: flutterTodoLambda
+? Provide the AWS Lambda function name: flutterTodoLambda
+? Choose the function template that you want to use:
+❯ CRUD function for Amazon DynamoDB
+  Serverless ExpressJS function
+```
+
+when you choose the CRUD function, you will be asked to provide the model details. Provide two attributes - "id" and "name" with string types. You can make the 'id' the partition key and "name" can be the sort key.
+
+You will also be asked if Authorization should be enabled. Choose 'Y' and enable Auth for all the four "create, read", "update" and "delete" functions.
+
+After completing the inputs, type the command below
+
+```bash
+amplify push
+```
+
+This will provision the necessary resources for the backend.
+
+We will now change the client to interact with the backend resources.
+
+Replace the code in todo_service.dart with the following.
+
+```dart
+import 'dart:typed_data';
+import 'dart:convert';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_api/amplify_api.dart';
+
+import 'todo.dart';
+
+Future<bool> insertTodo (Todo todo) async {
+  var postData = {
+    '\"name\"' : '\"' + todo.name + '\"',
+    '\"id\"' :  '\"' + todo.id + '\"'
+  };
+
+  print("Calling the rest api with " + postData.toString());
+
+  try {
+    RestOptions options = RestOptions(
+        apiName: 'flutterTodoApi',
+        path: '/todo',
+        body: Uint8List.fromList(postData.toString().codeUnits)
+    );
+
+
+
+    RestOperation restOperation = Amplify.API.post(
+        restOptions: options
+    );
+    RestResponse response = await restOperation.response;
+    print('POST call succeeded');
+    print(new String.fromCharCodes(response.data));
+    return true;
+  } on ApiException catch (e) {
+    print('POST call failed: $e');
+    return false;
+  }
+}
+
+Future<bool> deleteTodo (Todo todo) async {
+
+  try {
+    RestOptions options = RestOptions(
+        apiName: 'flutterTodoApi',
+        path: '/todo/object/' + todo.id + "/" + todo.name
+    );
+    RestOperation restOperation = Amplify.API.delete(
+        restOptions: options
+    );
+    RestResponse response = await restOperation.response;
+    print('DELETE call succeeded');
+    print(new String.fromCharCodes(response.data));
+    return true;
+  } on ApiException catch (e) {
+    print('DELETE call failed: $e');
+    return false;
+  }
+}
+
+Future<List<Todo>> fetchAllTodos(userId) async {
+
+  List<Todo> todoList = [];
+
+  try {
+    RestOptions options = RestOptions(
+        apiName: 'flutterTodoApi',
+        path: '/todo/' + userId
+    );
+    RestOperation restOperation = Amplify.API.get(
+        restOptions: options
+    );
+    RestResponse response = await restOperation.response;
+    print('GET call succeeded');
+    print(new String.fromCharCodes(response.data));
+    List<dynamic> parsedListJson = jsonDecode(new String.fromCharCodes(response.data));
+    todoList = List<Todo>.from(parsedListJson.map((i) => Todo.fromJson(i)));
+    return todoList;
+  } on ApiException catch (e) {
+    print('GET call failed: $e');
+    return todoList;
+  }
+}
+```
+
+And replace the code in todo_list.dart with the following.
+
+```dart
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/material.dart';
+import 'todo.dart';
+import 'package:uuid/uuid.dart';
+import 'todo_service.dart';
+
+const uuid = Uuid();
+
+class TodoList extends StatefulWidget {
+  const TodoList({Key? key, required this.title}) : super(key: key);
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
+
+  @override
+  State<TodoList> createState() => _TodoListState();
+}
+
+
+class _TodoListState extends State<TodoList> {
+
+  final TextEditingController _textFieldController = TextEditingController();
+  final List<Todo> _todos = <Todo>[];
+
+  @override
+  initState() {
+    super.initState();
+
+    _getTodoList();
+  }
+
+  void _addTodoItem(String name) async {
+    final user = await Amplify.Auth.getCurrentUser();
+    var todo = Todo(name: name, id: user.userId);
+    var insertedTodo = await insertTodo(todo);
+    if(insertedTodo) {
+      setState(() {
+        _todos.add(todo);
+      });
+      _textFieldController.clear();
+    } else {
+      print("Unable to insert the todo");
+    }
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
+    return Scaffold(
+      body: ListView(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        children: _todos.map((Todo todo) {
+          return TodoItem(
+            todo: todo,
+            onTodoDeleted: _handleTodoDelete,
+          );
+        }).toList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => _displayDialog(),
+          tooltip: 'Add Item',
+          child: Icon(Icons.add)),
+    );
+  }
+
+
+
+  void _handleTodoDelete(Todo todo) async {
+    if(await deleteTodo(todo) == true){
+      setState(() {
+        _todos.remove(todo);
+      });
+    }
+  }
+
+  void _getTodoList() async {
+    final user = await Amplify.Auth.getCurrentUser();
+    List<Todo> todoList = await fetchAllTodos(user.userId);
+    print("Received todo list ");
+    if(todoList.length > 0){
+      setState(() {
+        _todos.addAll(todoList);
+      });
+    }
+  }
+
+  Future<void> _displayDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add a new todo item'),
+          content: TextField(
+            controller: _textFieldController,
+            decoration: const InputDecoration(hintText: 'Type your new todo'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Add'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _addTodoItem(_textFieldController.text);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class TodoItem extends StatelessWidget {
+  TodoItem({
+    required this.todo,
+    required this.onTodoDeleted,
+  }) : super(key: ObjectKey(todo));
+
+  final Todo todo;
+  final onTodoDeleted;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+        onTap: () {
+          onTodoDeleted(todo);
+        },
+        leading: CircleAvatar(
+          child: Text(todo.name[0]),
+        ),
+        title: Text(todo.name),
+        trailing: Icon(Icons.delete)
+    );
+  }
+}
+```
+
+Rebuild the app and execute the run/debug command.
