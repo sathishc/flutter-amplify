@@ -8,7 +8,9 @@ A Flutter project that demonstrates Amplify integration with Flutter.
 
 2. Amplify CLI
 
-To install the Amplify cli, type the following 
+3. Fluuter CLI and Android Studio with Emulator setup 
+
+To install the Amplify cli, type the following in your command shell
 
 ```bash
 npm install -g @aws-amplify/cli
@@ -18,17 +20,29 @@ npm install -g @aws-amplify/cli
 
 1. Create a new Flutter App from the command line or Android Studio IDE (to create projects via android studio, you need to have installed Flutter plugins within studio).
 
-To create the app from command line, type the following
+To create the app from command line, type the following in your command line
 
 ```bash
 flutter create todo
 ```
 
-The above command will create a basic flutter app. We will replace the contents of this app to implement a basic Todo list with no backend
+The above command will create a basic flutter app. We will replace the contents of this app to implement a basic Todo list with no backend. Open the above 'todo' folder in an IDE (peferably Android Studio)
 
 ## Create a basic Todo list scaffold
 
+To create a basic Todolist without any backend functionality, create a folder called todo inside your 'lib' folder, create the files todo.dart, todo_list.dart and todo_service.dart and copy the contents of the files from this repository into the files you created.
 
+Change the code within the main.dart file with the contents of main.dart in this repository.
+
+Now you are ready to run this app. First install dependencies by running the following command from the root folder.
+
+```bash
+flutter pub get
+```
+
+Next launch the emulator from Android Studio and click on the 'Run' or 'Debug' icon to build and deploy the app in an emulator.
+
+You should now be able to see the app in the emulator and interact with it
 
 ## Integrate using Amplify
 
