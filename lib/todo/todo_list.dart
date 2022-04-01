@@ -1,4 +1,4 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+
 import 'package:flutter/material.dart';
 import 'todo.dart';
 import 'package:uuid/uuid.dart';
@@ -38,8 +38,8 @@ class _TodoListState extends State<TodoList> {
   }
 
   void _addTodoItem(String name) async {
-    final user = await Amplify.Auth.getCurrentUser();
-    var todo = Todo(name: name, id: user.userId);
+
+    var todo = Todo(name: name, id: uuid.v1());
     var insertedTodo = await insertTodo(todo);
     if(insertedTodo) {
       setState(() {
@@ -88,8 +88,8 @@ class _TodoListState extends State<TodoList> {
   }
 
   void _getTodoList() async {
-    final user = await Amplify.Auth.getCurrentUser();
-    List<Todo> todoList = await fetchAllTodos(user.userId);
+
+    List<Todo> todoList = await fetchAllTodos(uuid.v1());
     print("Received todo list ");
     if(todoList.length > 0){
       setState(() {
