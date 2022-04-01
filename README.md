@@ -18,7 +18,7 @@ npm install -g @aws-amplify/cli
 
 ## Getting Started
 
-1. Create a new Flutter App from the command line or Android Studio IDE (to create projects via android studio, you need to have installed Flutter plugins within studio).
+Create a new Flutter App from the command line or Android Studio IDE (to create projects via android studio, you need to have installed Flutter plugins within studio).
 
 To create the app from command line, type the following in your command line
 
@@ -42,7 +42,7 @@ flutter pub get
 
 Next launch the emulator from Android Studio and click on the 'Run' or 'Debug' icon to build and deploy the app in an emulator.
 
-You should now be able to see the app in the emulator and interact with it
+You should now be able to see the app in the emulator and interact with it. Though we can created todo items, these are not saved in a database and hence lost when we restart the app. Next we will see how these can be saved in a database.
 
 ## Integrate to a backend using Amplify
 
