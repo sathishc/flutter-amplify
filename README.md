@@ -551,4 +551,12 @@ class TodoItem extends StatelessWidget {
 }
 ```
 
-Rebuild the app and execute the run/debug command.
+Rebuild the app and execute the run/debug command. You should now be able to persist the items in the DynamoDB backend.
+
+## Cleanup
+
+You can cleanup the amplify backend by typing
+
+```bash
+amplify remove # answer Y at the prompt
+```
