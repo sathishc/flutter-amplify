@@ -1,10 +1,36 @@
-# todo
+# Flutter Todo App with Amplify
 
 A Flutter project that demonstrates Amplify integration with Flutter.
 
+## Pre-requisites
+
+1. An AWS account with local configuration (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION) pointing to that account and region. You can export the above variables in your shell for access. 
+
+2. Amplify CLI
+
+To install the Amplify cli, type the following 
+
+```bash
+npm install -g @aws-amplify/cli
+```
+
 ## Getting Started
 
-1. Create a new Flutter App from the command line or IOE. 
+1. Create a new Flutter App from the command line or Android Studio IDE (to create projects via android studio, you need to have installed Flutter plugins within studio).
+
+To create the app from command line, type the following
+
+```bash
+flutter create todo
+```
+
+The above command will create a basic flutter app. We will replace the contents of this app to implement a basic Todo list with no backend
+
+## Create a basic Todo list scaffold
+
+
+
+## Integrate using Amplify
 
 2. We will then update dependencies in pubspec.yaml to include amplify libraries. Copy the following code into the yaml file. Note that we are adding libraries for amplify, cognito and authentication
 
