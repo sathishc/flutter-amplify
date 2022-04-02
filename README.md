@@ -394,16 +394,33 @@ amplify add api
 ? Choose a Lambda source Create a new Lambda function
 ? Provide a friendly name for your resource to be used as a label for this category in the project: flutterTodoLambda
 ? Provide the AWS Lambda function name: flutterTodoLambda
-? Choose the function template that you want to use:
-❯ CRUD function for Amazon DynamoDB
-  Serverless ExpressJS function
+? Choose the function template that you want to use: CRUD function for Amazon DynamoDB
+? Choose a DynamoDB data source option: Create a new DynamoDB table
+You can now add columns to the table.
+
+✔ What would you like to name this column · id
+✔ Choose the data type · string
+✔ Would you like to add another column? (Y/n) · yes
+✔ What would you like to name this column · name
+✔ Choose the data type · string
+✔ Would you like to add another column? (Y/n) · no
+
+✔ Choose partition key for the table · id
+✔ Do you want to add a sort key to your table? (Y/n) · yes
+
+✔ Do you want to add global secondary indexes to your table? (Y/n) · no
+✔ Do you want to add a Lambda Trigger for your Table? (y/N) · no
+
+? Do you want to configure advanced settings? No
+? Do you want to edit the local lambda function now? No
+
+✔ Restrict API access? (Y/n) · yes
+✔ Who should have access? · Authenticated users only
+✔ What permissions do you want to grant to Authenticated users? · create, read, update, delete
+✔ Do you want to add another path? (y/N) · no
 ```
 
-when you choose the CRUD function, you will be asked to provide the model details. Provide two attributes - "id" and "name" with string types. You can make the 'id' the partition key and "name" can be the sort key.
-
-You will also be asked if Authorization should be enabled. Choose 'Y' and enable Auth for all the four "create, read", "update" and "delete" functions.
-
-After completing the inputs, type the command below
+After completing the inputs, type the command below to provision the resources
 
 ```bash
 amplify push
