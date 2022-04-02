@@ -266,7 +266,7 @@ We will now add authentication to our app by provisioning a cognito backend and 
 1. Initialize amplify within the project and add authentication
 ```bash
 amplify add auth # add basic username based authentication by following the instructions
-amplify push # this will create the necessary cognito backend in AWs and update amplifyconfiguration.dart
+amplify push --y # this will create the necessary cognito backend in AWs and update amplifyconfiguration.dart
 ```
 
 2. Update the the UI to include authentication. Replace the main.dart with the code below.
@@ -423,7 +423,7 @@ You can now add columns to the table.
 After completing the inputs, type the command below to provision the resources
 
 ```bash
-amplify push
+amplify push --y
 ```
 
 This will provision the necessary resources for the backend.
