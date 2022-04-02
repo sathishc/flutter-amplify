@@ -195,7 +195,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   amplify_flutter: ^0.4.0
   amplify_auth_cognito: ^0.4.0
+  amplify_api: ^0.4.0
   amplify_authenticator: ^0.1.0
+  uuid: 3.0.6
 
 dev_dependencies:
   flutter_test:
@@ -408,7 +410,6 @@ amplify push
 
 This will provision the necessary resources for the backend.
 
-We will now change the client to interact with the backend resources.
 
 Replace the code in todo_service.dart with the following.
 
