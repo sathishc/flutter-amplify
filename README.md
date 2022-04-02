@@ -144,7 +144,7 @@ You should now be able to see the app in the emulator and interact with it. Thou
 
 ## Integrate to a backend using Amplify
 
-We will now integrated to an AWS backend which consists of the API Gateway, a Lambda function and a DynamoDB database. We will also introduce Authentication for the system using AWS Cognito.
+We will now integrate the app to AWS backend services which consists of the API Gateway, a Lambda function and a DynamoDB database. We will also introduce Authentication for the system using AWS Cognito.
 
 1. We need to first initiatize Amplify in your project. From the root folder in your command line type the following
 
