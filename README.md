@@ -375,6 +375,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 ```
+Ensure your Android minSdkVersion is 21 in your android/app/build.gradle settings.
 
 Now build the project and redeploy the app into the emulator. You should now see components that allow you to sign-up, sign-in, reset password etc within the app.
 
