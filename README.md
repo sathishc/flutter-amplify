@@ -668,7 +668,7 @@ class TodoItem extends StatelessWidget {
 }
 ```
 
-Rebuild the app and execute the run/debug command. You should now be able to persist the items in the DynamoDB backend.
+Rebuild the app and execute the run/debug command. You should now be able to persist the items in the DynamoDB backend. Also when you signout or restart the app, the todo items are fetched from the backend database and displayed in your user interface.
 
 ## Cleanup
 
