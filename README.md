@@ -675,5 +675,5 @@ Rebuild the app and execute the run/debug command. You should now be able to per
 You can cleanup the amplify backend by typing
 
 ```bash
-amplify remove # answer Y at the prompt
+amplify delete # answer Y at the prompt. This will remove all the provisioned resources.
 ```
