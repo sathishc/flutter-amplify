@@ -272,7 +272,7 @@ amplify push # this will create the necessary cognito backend in AWs and update 
 2. Update the the UI to include authentication. Replace the main.dart with the code below.
 
 ```dart
-mport 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 // Amplify Flutter Packages
 import 'package:amplify_flutter/amplify_flutter.dart';
